@@ -1,0 +1,36 @@
+<?php
+error_reporting(E_ERROR | E_PARSE);
+require_once '../snstv/db.php';
+$hotspotid = $_GET['hotspotid'];
+$fromDate =  $_GET['fromDate'];
+$toDate = $_GET['toDate'];
+$sql = "select count(username) as sessions ,date(authdate) as day from radpostauth where authdate between '".$fromDate." 00:00:00' and '".$toDate." 23:59:59' and reply = 'Access-Accept' and calledstationid like '%".$hotspotid."'  group by date (radpostauth.authdate)";
+$sql1 = "select count(username) as connections ,date(authdate) as day from radpostauth where authdate between '".$fromDate." 00:00:00' and '".$toDate." 23:59:59' and calledstationid like '%".$hotspotid."'  group by date (radpostauth.authdate)";
+$sql2 = "select age, count(*) as count from (select distinct(radpostauth.username), userinfo.age from radpostauth left join userinfo on radpostauth.username = userinfo.username where radpostauth.authdate between '".$fromDate." 00:00:00' and '".$toDate." 23:59:59' and calledstationid like '%".$hotspotid."') as t group by age";
+$sql3 = "select gender, count(*) as count from (select distinct(radpostauth.username), userinfo.gender from radpostauth left join userinfo on radpostauth.username = userinfo.username where radpostauth.authdate between '".$fromDate." 00:00:00' and '".$toDate." 23:59:59' and calledstationid like '%".$hotspotid."') as t group by gender";
+$sql4 = "select devicetype, count(*) as count from (select distinct(radpostauth.username), userinfo.devicetype from radpostauth left join userinfo on radpostauth.username = userinfo.username where radpostauth.authdate between '".$fromDate." 00:00:00' and '".$toDate." 23:59:59' and calledstationid like '%".$hotspotid."') as t group by devicetype";
+$sql5 = "select browser, count(*) as count from (select distinct(radpostauth.username), userinfo.browser from radpostauth left join userinfo on radpostauth.username = userinfo.username where radpostauth.authdate between '".$fromDate." 00:00:00' and '".$toDate." 23:59:59' and calledstationid like '%".$hotspotid."') as t group by browser";
+$sql6 = "select ostype, count(*) as count from (select distinct(radpostauth.username), userinfo.ostype from radpostauth left join userinfo on radpostauth.username = userinfo.username where radpostauth.authdate between '".$fromDate." 00:00:00' and '".$toDate." 23:59:59' and calledstationid like '%".$hotspotid."') as t group by ostype";
+$sql7 = "select count(*) as returning_users from (select username from radpostauth where calledstationid like '%".$hotspotid."' and authdate between '".$fromDate." 00:00:00' and '".$toDate." 23:59:59' group by username having count(username) > 1) as t";
+$sql8 = "select count(*) as new_users from (select username from radpostauth where calledstationid like '%".$hotspotid."' and authdate between '".$fromDate." 00:00:00' and '".$toDate." 23:59:59' group by username having count(username) =1) as t";
+$session_count = mysqli_query($sqli_connection,$sql);
+$session_count1 = $session_count->fetch_all(MYSQLI_ASSOC);
+$connection_count= mysqli_query($sqli_connection,$sql1);
+$connection_count1 = $connection_count->fetch_all(MYSQLI_ASSOC);
+$age_count = mysqli_query($sqli_connection,$sql2);
+$age_count1 = $age_count->fetch_all(MYSQLI_ASSOC);
+$gender_count= mysqli_query($sqli_connection,$sql3);
+$gender_count1 = $gender_count->fetch_all(MYSQLI_ASSOC);
+$device_count = mysqli_query($sqli_connection,$sql4);
+$device_count1 = $device_count->fetch_all(MYSQLI_ASSOC);
+$browser_count = mysqli_query($sqli_connection,$sql5);
+$browser_count1 = $browser_count->fetch_all(MYSQLI_ASSOC);
+$os_count = mysqli_query($sqli_connection,$sql6);
+$os_count1 = $os_count->fetch_all(MYSQLI_ASSOC);
+$return_count = mysqli_query($sqli_connection,$sql7);
+$return_count1 = $return_count->fetch_all(MYSQLI_ASSOC);
+$new_count = mysqli_query($sqli_connection,$sql8);
+$new_count1 = $new_count->fetch_all(MYSQLI_ASSOC);
+$result = array($session_count1,$connection_count1,$age_count1,$gender_count1,$device_count1,$browser_count1,$os_count1,$return_count1,$new_count1);
+echo json_encode($result);
+?>
