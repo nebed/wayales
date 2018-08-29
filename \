@@ -458,8 +458,7 @@ echo $htmlPage;
         type: 'POST',
         data: formData,
         success: function (data) {
-             $("#ajax_responses").html(data);
-     eval($(this).text());
+            alert(data)
         },
         cache: false,
         contentType: false,
