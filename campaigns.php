@@ -100,7 +100,7 @@ $_SESSION['LAST_ACTIVITY'] = $time;
           </nav>
 	</div>
 	<!-- START OF MODAL CONTENT -->
-  <form action="createcampaigns.php" id="campaigndata" method="post" data-parsley-validate="" novalidate=""  >
+  <form action="" id="campaigndata" method="post" data-parsley-validate="" novalidate=""  >
 		<div class="modal colored-header colored-header-primary fade" id="newCampaign" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
            <div class="modal-dialog modal-lg">
           <div class="modal-content">
