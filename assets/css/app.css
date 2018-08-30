@@ -74,6 +74,23 @@
     box-sizing: border-box;
 }
 
+.fa-images{
+ color:#FF5733;
+}
+.fa-app-store{
+ color:#32CD32;
+}
+
+.fa-external-link-alt{
+color:#5f99f5;
+}
+.fa-youtube {
+color:#ff0000;
+}
+
+.fa-disabled {
+color:#808080 !important;
+}
 html {
     font-family: sans-serif;
     line-height: 1.15;
