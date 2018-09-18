@@ -49,6 +49,12 @@
     .container {
         min-width: 992px !important;
     }
+    .report-tools {
+	display:none;
+    }
+    .page-break {
+	page-break-after: always;
+    }
     .navbar {
         display: none;
     }
@@ -73,7 +79,19 @@
 *::after {
     box-sizing: border-box;
 }
-
+#page-loader {
+  position: absolute;
+  top: 0;
+  bottom: 0%;
+  left: 0;
+  right: 0%;
+  background-color: white;
+  z-index: 99;
+  display: none;
+  text-align: center;
+  width: 100%;
+  padding-top: 25px;
+}
 .fa-images{
  color:#FF5733;
 }
@@ -5516,7 +5534,7 @@ button.close {
     padding: 0.25rem 0.5rem;
     color: #FFFFFF;
     text-align: center;
-    background-color: #000000;
+    background-color: #000000B3;
     border-radius: 2px;
 }
 

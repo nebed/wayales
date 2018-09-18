@@ -50,6 +50,9 @@ $_SESSION['LAST_ACTIVITY'] = $time;
     </head>
 
     <body>
+	<div id="page-loader">
+		<img class="img-fluid" src="/assets/img/Wayales-Animation.gif">
+	</div>
         <div class="be-wrapper be-fixed-sidebar">
             <nav class="navbar navbar-expand fixed-top be-top-header">
                 <div class="container-fluid">
@@ -119,8 +122,8 @@ $_SESSION['LAST_ACTIVITY'] = $time;
                 </div>
                 <div class="main-content container-fluid" id="main-content">
                 <h4 class="title">Pick a Date Range</h4>
-                <div class="row">
-                    <div class="col-lg-6">
+                <div class="row report-tools">
+                    <div class="col-md-6 report-tools">
                     <div class="form-group">
                         
                     <label class="w-100">From
@@ -143,8 +146,9 @@ $_SESSION['LAST_ACTIVITY'] = $time;
                     </label>
                   </div>
                     </div>
-                    <div class="col-lg-6" style="padding:50px 20px;">
-                    <button class="btn btn-space btn-primary btn-lg" onclick="downloadcsv()"><i class="icon icon-left mdi mdi-download"></i>     Download Collected Data</button>
+                    <div class="col-md-6 report-tools" style="padding:50px 20px;">
+		    <button class="btn btn-space btn-primary btn-lg" onclick="downloadcsv()"><i class="icon icon-left mdi mdi-download"></i>     Download Collected Data</button>
+    <button class="btn btn-space btn-primary btn-lg"  onclick="window.print()"><i class="icon icon-left mdi mdi-print"></i>     Print</button>
                     </div>
                 </div>
                     <div class="row">
@@ -159,8 +163,8 @@ $_SESSION['LAST_ACTIVITY'] = $time;
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-6">
+                    <div class="row page-break">
+                        <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header card-header-divider">
                                     <div class="tools"><span class="icon mdi mdi-chevron-down"></span><span class="icon mdi mdi-refresh-sync"></span><span class="icon mdi mdi-close"></span></div><span class="title">Return Visitors:New Users</span><span class="card-subtitle">This is the ratio of Returning Users to New Users</span>
@@ -170,7 +174,7 @@ $_SESSION['LAST_ACTIVITY'] = $time;
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header card-header-divider">
                                     <div class="tools"><span class="icon mdi mdi-chevron-down"></span><span class="icon mdi mdi-refresh-sync"></span><span class="icon mdi mdi-close"></span></div><span class="title">Ages</span><span class="card-subtitle">This is the ratio of Age Ranges</span>
@@ -182,7 +186,7 @@ $_SESSION['LAST_ACTIVITY'] = $time;
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header card-header-divider">
                                     <div class="tools"><span class="icon mdi mdi-chevron-down"></span><span class="icon mdi mdi-refresh-sync"></span><span class="icon mdi mdi-close"></span></div><span class="title">Gender</span><span class="card-subtitle">This is the ratio of Genders</span>
@@ -192,7 +196,7 @@ $_SESSION['LAST_ACTIVITY'] = $time;
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header card-header-divider">
                                     <div class="tools"><span class="icon mdi mdi-chevron-down"></span><span class="icon mdi mdi-refresh-sync"></span><span class="icon mdi mdi-close"></span></div><span class="title">Operating Systems</span><span class="card-subtitle">This is a ratio of the Operating Systems</span>
@@ -204,7 +208,7 @@ $_SESSION['LAST_ACTIVITY'] = $time;
                         </div>
                     </div>
                     <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header card-header-divider">
                                     <div class="tools"><span class="icon mdi mdi-chevron-down"></span><span class="icon mdi mdi-refresh-sync"></span><span class="icon mdi mdi-close"></span></div><span class="title">Browser</span><span class="card-subtitle">This is the ratio of Browsers</span>
@@ -214,7 +218,7 @@ $_SESSION['LAST_ACTIVITY'] = $time;
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header card-header-divider">
                                     <div class="tools"><span class="icon mdi mdi-chevron-down"></span><span class="icon mdi mdi-refresh-sync"></span><span class="icon mdi mdi-close"></span></div><span class="title">Device Model</span><span class="card-subtitle">This is a Ratio of the Device Models</span>
@@ -273,7 +277,8 @@ $_SESSION['LAST_ACTIVITY'] = $time;
         <script src="/assets/lib/bootstrap/dist/js/bootstrap.bundle.min.js" type="text/javascript"></script>
         <script src="/assets/js/app.js" type="text/javascript"></script>
         <script src="/assets/lib/datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-        <script src="/assets/lib/chartjs/Chart.min.js" type="text/javascript"></script>
+	<script src="/assets/lib/chartjs/Chart.min.js" type="text/javascript"></script>
+	<script src="/assets/js/chartjs-plugin-datalabels.js" type="text/javascript"></script>
         <script src="/assets/js/app-charts-chartjs.js" type="text/javascript"></script>
         <script type="text/javascript">
             $(document).ready(function() {
@@ -300,7 +305,13 @@ $_SESSION['LAST_ACTIVITY'] = $time;
                  var to_date = document.getElementById('to-date').value;
                 $.ajax({
                 url: "https://admin.wayales.com/data.php?hotspotid=" + hotspotid + "&fromDate=" + from_date + "&toDate=" + to_date,
-                method: "GET",
+		method: "GET",
+		beforeSend: function(){
+			$('#page-loader').show();
+		},
+		complete: function(){
+			$('#page-loader').hide();
+		 },
                 success: function(data) {
                 var responsedata = $.parseJSON(data);
                     console.log(responsedata);

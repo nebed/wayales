@@ -59,6 +59,51 @@ var App = (function() {
             all_count.push(obj8[i].new_users);
         }
 
+	Chart.pluginService.register({
+			beforeRender: function (chart) {
+				if (chart.config.options.showAllTooltips) {
+					// create an array of tooltips
+					// we can't use the chart tooltip because there is only one tooltip per chart
+					chart.pluginTooltips = [];
+					chart.config.data.datasets.forEach(function (dataset, i) {
+						chart.getDatasetMeta(i).data.forEach(function (sector, j) {
+							chart.pluginTooltips.push(new Chart.Tooltip({
+								_chart: chart.chart,
+								_chartInstance: chart,
+								_data: chart.data,
+								_options: chart.options.tooltips,
+								_active: [sector]
+							}, chart));
+						});
+					});
+
+					// turn off normal tooltips
+					chart.options.tooltips.enabled = false;
+				}
+			},
+			afterDraw: function (chart, easing) {
+				if (chart.config.options.showAllTooltips) {
+					// we don't want the permanent tooltips to animate, so don't do anything till the animation runs atleast once
+					if (!chart.allTooltipsOnce) {
+						if (easing !== 1)
+							return;
+						chart.allTooltipsOnce = true;
+					}
+
+					// turn on tooltips
+					chart.options.tooltips.enabled = true;
+					Chart.helpers.each(chart.pluginTooltips, function (tooltip) {
+						tooltip.initialize();
+						tooltip.update();
+						// we don't actually need this since we are not animating tooltips
+						tooltip.pivot();
+						tooltip.transition(easing).draw();
+					});
+					chart.options.tooltips.enabled = false;
+				}
+			}
+		})
+
         function lineChart() {
 
             //Get the canvas element
@@ -89,24 +134,7 @@ var App = (function() {
                 type: 'line',
                 data: lineChartData,
 		options: {
-				plugins: {
-					datalabels: {
-						backgroundColor: function(context) {
-							return context.dataset.backgroundColor;
-						},
-						borderRadius: 4,
-						color: 'white',
-						font: {
-							weight: 'bold'
-						},
-						formatter: Math.round
-					}
-				},
-				scales: {
-					yAxes: [{
-						stacked: true
-					}]
-				}
+				showAllTooltips: true
 			}
             });
         }
@@ -144,27 +172,7 @@ var App = (function() {
                 type: 'pie',
                 data: data,
 		options: {
-				plugins: {
-					datalabels: {
-						backgroundColor: function(context) {
-							return context.dataset.backgroundColor;
-						},
-						borderColor: 'white',
-						borderRadius: 25,
-						borderWidth: 2,
-						color: 'white',
-						display: function(context) {
-							var dataset = context.dataset;
-							var count = dataset.data.length;
-							var value = dataset.data[context.dataIndex];
-							return value > count * 1.5;
-						},
-						font: {
-							weight: 'bold'
-						},
-						formatter: Math.round
-					}
-				}
+				showAllTooltips: true
 			}
             });
         }
@@ -203,27 +211,7 @@ var App = (function() {
                 type: 'doughnut',
                 data: data,
 		options: {
-				plugins: {
-					datalabels: {
-						backgroundColor: function(context) {
-							return context.dataset.backgroundColor;
-						},
-						borderColor: 'white',
-						borderRadius: 25,
-						borderWidth: 2,
-						color: 'white',
-						display: function(context) {
-							var dataset = context.dataset;
-							var count = dataset.data.length;
-							var value = dataset.data[context.dataIndex];
-							return value > count * 1.5;
-						},
-						font: {
-							weight: 'bold'
-						},
-						formatter: Math.round
-					}
-				}
+				showAllTooltips: true
 			}
             });
         }
@@ -257,27 +245,7 @@ var App = (function() {
                 type: 'pie',
                 data: data,
 		options: {
-				plugins: {
-					datalabels: {
-						backgroundColor: function(context) {
-							return context.dataset.backgroundColor;
-						},
-						borderColor: 'white',
-						borderRadius: 25,
-						borderWidth: 2,
-						color: 'white',
-						display: function(context) {
-							var dataset = context.dataset;
-							var count = dataset.data.length;
-							var value = dataset.data[context.dataIndex];
-							return value > count * 1.5;
-						},
-						font: {
-							weight: 'bold'
-						},
-						formatter: Math.round
-					}
-				}
+				showAllTooltips: true
 			}
             });
         }
@@ -313,28 +281,8 @@ var App = (function() {
                 type: 'doughnut',
                 data: data,
 		options: {
-				plugins: {
-					datalabels: {
-						backgroundColor: function(context) {
-							return context.dataset.backgroundColor;
-						},
-						borderColor: 'white',
-						borderRadius: 25,
-						borderWidth: 2,
-						color: 'white',
-						display: function(context) {
-							var dataset = context.dataset;
-							var count = dataset.data.length;
-							var value = dataset.data[context.dataIndex];
-							return value > count * 1.5;
-						},
-						font: {
-							weight: 'bold'
-						},
-						formatter: Math.round
-					}
-				}
-			}
+                                showAllTooltips: true
+                        }
             });
         }
 
@@ -466,30 +414,7 @@ var App = (function() {
 
             var pie = new Chart(ctx, {
                 type: 'doughnut',
-                data: data,
-		options: {
-				plugins: {
-					datalabels: {
-						backgroundColor: function(context) {
-							return context.dataset.backgroundColor;
-						},
-						borderColor: 'white',
-						borderRadius: 25,
-						borderWidth: 2,
-						color: 'white',
-						display: function(context) {
-							var dataset = context.dataset;
-							var count = dataset.data.length;
-							var value = dataset.data[context.dataIndex];
-							return value > count * 1.5;
-						},
-						font: {
-							weight: 'bold'
-						},
-						formatter: Math.round
-					}
-				}
-			}
+                data: data
             });
         }
 
@@ -532,30 +457,7 @@ var App = (function() {
 
             var pie = new Chart(ctx, {
                 type: 'pie',
-                data: data,
-		options: {
-				plugins: {
-					datalabels: {
-						backgroundColor: function(context) {
-							return context.dataset.backgroundColor;
-						},
-						borderColor: 'white',
-						borderRadius: 25,
-						borderWidth: 2,
-						color: 'white',
-						display: function(context) {
-							var dataset = context.dataset;
-							var count = dataset.data.length;
-							var value = dataset.data[context.dataIndex];
-							return value > count * 1.5;
-						},
-						font: {
-							weight: 'bold'
-						},
-						formatter: Math.round
-					}
-				}
-			}
+                data: data
             });
         }
         lineChart();
